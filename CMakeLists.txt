@@ -18,7 +18,7 @@ file(GLOB source_files
 add_executable(BroForce ${source_files})
 
 TARGET_LINK_LIBRARIES(BroForce 
-        "/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/lib/libSDL2-2.0.so"
-        "/home/ruben/Projects/BroForce/3rdParty/SDL2_image-2.0.5/lib/libSDL2_image.so")
+        ${CMAKE_SOURCE_DIR}/3rdParty/SDL2-2.0.12/lib/libSDL2-2.0.so
+        ${CMAKE_SOURCE_DIR}/3rdParty/SDL2_image-2.0.5/lib/libSDL2_image.so)
 
 set (CMAKE_CXX_FLAGS "-g")

@@ -8,7 +8,7 @@ int main (int argc, char **argv)
   Render_t render;
   Input_t input;
   render.Start();
-  render.AddSprite("/home/ruben/Projects/BroForce/resources/img/Brobocop.png");
+  render.AddSprite("/home/ruben/Projects/BroForceSDL/resources/img/Brobocop.png");
 
   while (!input.quit){
     input.Update();
