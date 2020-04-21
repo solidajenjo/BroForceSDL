@@ -1,0 +1,10 @@
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/install.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/list_install_components.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/rebuild_cache.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/install/strip.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/install/local.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/SDL2.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/uninstall.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/SDL2main.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/SDL2-static.dir
+/home/ruben/Projects/BroForce/3rdParty/SDL2-2.0.12/build/CMakeFiles/edit_cache.dir
