@@ -3,7 +3,7 @@
 
 struct Input_t : public Manager_t{
 
-    bool Update() override;
+    bool Update(float dt) override;
 
     bool quit = false;
 };

@@ -41,28 +41,36 @@ bool Render_t::Start(){
     return true;
 }
 
-bool Render_t::Update(){
-    SDL_Rect rect;
-    rect.x = sprites[0]->rect.x + sprites[0]->currentFrame * sprites[0]->frameOffset;
-    rect.y = sprites[0]->rect.y;
-    rect.w = sprites[0]->rect.w;
-    rect.h = sprites[0]->rect.h;
+bool Render_t::Update(float dt){
+    for (auto& sprite : sprites) {
 
-    SDL_Rect rect2;
-    rect2.x = 100;
-    rect2.y = 100;
-    rect2.w = sprites[0]->rect.w * 3;
-    rect2.h = sprites[0]->rect.h * 3;
-    SDL_RenderCopy( renderer, sprites[0]->texture, &rect, &rect2 );
+        SDL_Rect rect;
+        rect.x = sprite->rect.x + sprite->currentFrame * sprite->frameOffset;
+        rect.y = sprite->rect.y;
+        rect.w = sprite->rect.w;
+        rect.h = sprite->rect.h;
+
+        SDL_Rect rect2;
+        rect2.x = 0;
+        rect2.y = 0;
+        rect2.w = sprite->rect.w * sprite->scale;
+        rect2.h = sprite->rect.h * sprite->scale;
+        SDL_RenderCopy( renderer, sprite->texture, &rect, &rect2 );
+        
+        if (sprite->elapsedFrameTime > sprite->frameTime){
+            ++sprite->currentFrame;
+            sprite->elapsedFrameTime = 0.f;
+        }
+        else
+            sprite->elapsedFrameTime += dt;
+
+        if (sprite->currentFrame == sprite->frameCount)
+            sprite->currentFrame = 0;
+    }
 
     SDL_RenderPresent(renderer);
       
     SDL_RenderClear(renderer);
-    ++sprites[0]->currentFrame;
-    if (sprites[0]->currentFrame == sprites[0]->frameCount)
-        sprites[0]->currentFrame = 0;
-
-    SDL_Delay(100);
     return true;
 }
 
@@ -72,7 +80,8 @@ bool Render_t::Clean(){
   return true;
 }
 
-void Render_t::AddSprite(const std::string& name){
+void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint16_t wR, uint16_t hR,
+    float scale, uint8_t fps, uint8_t frameCount, uint8_t frameOffset){
 
     SDL_Texture* newTexture = NULL;
 
@@ -98,13 +107,8 @@ void Render_t::AddSprite(const std::string& name){
 
     std::cout << name << " texture loaded.\n";
 
-    Sprite_t* s = new Sprite_t();
+    Sprite_t* s = new Sprite_t(xR, yR, wR, hR, scale, fps, frameCount, frameOffset);
+
     s->texture = newTexture;
-    s->rect.x = 18;
-    s->rect.y = 22;
-    s->rect.w = 15;
-    s->rect.h = 20;
-    s->frameOffset = 32;
-    s->frameCount = 4;
     sprites.push_back(s);
 }

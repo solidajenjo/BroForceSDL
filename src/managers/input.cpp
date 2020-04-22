@@ -1,7 +1,7 @@
 #include "input.h"
 #include "SDL_events.h"
 
-bool Input_t::Update(){
+bool Input_t::Update(float dt){
     SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
