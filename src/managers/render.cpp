@@ -2,7 +2,6 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include <iostream>
-#include "component/sprite.h"
 
 #define WIDTH 800
 
@@ -38,34 +37,39 @@ bool Render_t::Start(){
 
     SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
+    sprites.reserve(100); //TODO:Magic number
     return true;
+}
+
+void Render_t::BlitTexture(SDL_Texture* tex, SDL_Rect& src, SDL_Rect& dst){
+    SDL_RenderCopy( renderer, tex, &src, &dst );
 }
 
 bool Render_t::Update(float dt){
     for (auto& sprite : sprites) {
 
         SDL_Rect rect;
-        rect.x = sprite->rect.x + sprite->currentFrame * sprite->frameOffset;
-        rect.y = sprite->rect.y;
-        rect.w = sprite->rect.w;
-        rect.h = sprite->rect.h;
+        rect.x = sprite.rect.x + sprite.currentFrame * sprite.frameOffset;
+        rect.y = sprite.rect.y;
+        rect.w = sprite.rect.w;
+        rect.h = sprite.rect.h;
 
         SDL_Rect rect2;
         rect2.x = 0;
         rect2.y = 0;
-        rect2.w = sprite->rect.w * sprite->scale;
-        rect2.h = sprite->rect.h * sprite->scale;
-        SDL_RenderCopy( renderer, sprite->texture, &rect, &rect2 );
+        rect2.w = sprite.rect.w * sprite.scale;
+        rect2.h = sprite.rect.h * sprite.scale;
+        BlitTexture(sprite.texture, rect, rect2 );
         
-        if (sprite->elapsedFrameTime > sprite->frameTime){
-            ++sprite->currentFrame;
-            sprite->elapsedFrameTime = 0.f;
+        if (sprite.elapsedFrameTime > sprite.frameTime){
+            ++sprite.currentFrame;
+            sprite.elapsedFrameTime = 0.f;
         }
         else
-            sprite->elapsedFrameTime += dt;
+            sprite.elapsedFrameTime += dt;
 
-        if (sprite->currentFrame == sprite->frameCount)
-            sprite->currentFrame = 0;
+        if (sprite.currentFrame == sprite.frameCount)
+            sprite.currentFrame = 0;
     }
 
     SDL_RenderPresent(renderer);
@@ -118,14 +122,13 @@ SDL_Texture* Render_t::LoadTexture(const std::string& name){
     return newTexture;
 }
 
-void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint16_t wR, uint16_t hR,
+Sprite_t* Render_t::CreateSprite(const std::string& name, uint16_t xR, uint16_t yR, uint16_t wR, uint16_t hR,
     float scale, uint8_t fps, uint8_t frameCount, uint8_t frameOffset){
 
-    Sprite_t* s = new Sprite_t(xR, yR, wR, hR, scale, fps, frameCount, frameOffset);
-
     auto tex = LoadTexture(name);
-    if (tex){
-        s->texture = tex;
-        sprites.push_back(s);
+    if (tex){ 
+        sprites.emplace_back(*this, tex, xR, yR, wR, hR, scale, fps, frameCount, frameOffset);
+        return &(sprites.back());
     }
+    return nullptr;
 }

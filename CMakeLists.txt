@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)  
 project(BroForce)               
-set(CMAKE_CXX_STANDARD 14)           
+set(CMAKE_CXX_STANDARD 17)           
 include_directories(
         "./3rdParty/SDL2-2.0.12/include"
         "./3rdParty/SDL2_image-2.0.5"
