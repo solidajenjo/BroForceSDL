@@ -16,6 +16,7 @@ struct Render_t : public Manager_t
     bool Start() override;
     bool Update(float dt) override;
     bool Clean() override;
+    void DestroyComponentsByEntityId(uint16_t eid) override;
 
     //TODO: Too many parameters
     Sprite_t* CreateSprite(const std::string& name, uint16_t xR, uint16_t yR, uint16_t wR, uint16_t hR,

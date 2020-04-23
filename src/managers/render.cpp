@@ -132,3 +132,12 @@ Sprite_t* Render_t::CreateSprite(const std::string& name, uint16_t xR, uint16_t 
     }
     return nullptr;
 }
+
+void Render_t::DestroyComponentsByEntityId(uint16_t eid){
+    for (auto it = sprites.begin(); it < sprites.end(); ++it){
+        if ((*it).entityId == eid){
+            std::iter_swap(it, sprites.end() - 1);
+            sprites.pop_back();
+        }
+    }
+}

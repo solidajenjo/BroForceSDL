@@ -18,6 +18,8 @@ int main (int argc, char **argv)
   auto sprite = render.CreateSprite("/home/ruben/Projects/BroForceSDL/resources/img/Brobocop.png", 
       18, 22, 15, 20, 3, 10, 4, 32);
   
+  Sprite_t s2 = *sprite;
+
   player.AddComponent(sprite);
     
   auto s = player.GetComponent<Sprite_t>();

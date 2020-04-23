@@ -7,7 +7,7 @@
 struct Component_t;
 
 struct Entity_t{
-    uint16_t id = 20;
+    uint16_t id = lastEntityId++;
     std::unordered_map<int, Component_t*> components;
     
     template<class T>
@@ -28,6 +28,7 @@ struct Entity_t{
 
 private:
 
+    inline static int lastEntityId = 0;
     inline static int componentID = 0;
 
     template<class T>
