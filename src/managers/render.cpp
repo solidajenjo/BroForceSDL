@@ -75,13 +75,20 @@ bool Render_t::Update(float dt){
 }
 
 bool Render_t::Clean(){
-  SDL_DestroyWindow(window);
-  SDL_Quit(); 
-  return true;
+    for (auto& t : textures){
+        SDL_DestroyTexture(t.second);
+    }
+
+    SDL_DestroyWindow(window);
+    SDL_Quit(); 
+    return true;
 }
 
-void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint16_t wR, uint16_t hR,
-    float scale, uint8_t fps, uint8_t frameCount, uint8_t frameOffset){
+SDL_Texture* Render_t::LoadTexture(const std::string& name){
+
+    auto it = textures.find(name); //Query if it's already loaded
+    if (it != textures.end())
+        return (*it).second;
 
     SDL_Texture* newTexture = NULL;
 
@@ -90,7 +97,7 @@ void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint
     if( loadedSurface == nullptr )
     {
         std::cout << "Unable to load image " << name.c_str() << "! SDL_image Error: " << IMG_GetError() << "\n";
-        return;
+        return nullptr;
     }
     else
     {
@@ -99,6 +106,7 @@ void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint
         if( newTexture == nullptr )
         {
           std::cout << "Unable to create texture from " << name.c_str() << "! SDL Error: " << SDL_GetError() << "\n";
+            return nullptr;
         }
 
         //Get rid of old loaded surface
@@ -106,9 +114,18 @@ void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint
     }
 
     std::cout << name << " texture loaded.\n";
+    textures.insert(std::make_pair(name, newTexture));
+    return newTexture;
+}
+
+void Render_t::AddSprite(const std::string& name, uint16_t xR, uint16_t yR, uint16_t wR, uint16_t hR,
+    float scale, uint8_t fps, uint8_t frameCount, uint8_t frameOffset){
 
     Sprite_t* s = new Sprite_t(xR, yR, wR, hR, scale, fps, frameCount, frameOffset);
 
-    s->texture = newTexture;
-    sprites.push_back(s);
+    auto tex = LoadTexture(name);
+    if (tex){
+        s->texture = tex;
+        sprites.push_back(s);
+    }
 }

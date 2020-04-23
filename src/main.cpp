@@ -13,6 +13,8 @@ int main (int argc, char **argv)
   render.Start();
   render.AddSprite("/home/ruben/Projects/BroForceSDL/resources/img/bg.png", 
     0, 0, 800, 450);
+  render.AddSprite("/home/ruben/Projects/BroForceSDL/resources/img/bg.png", 
+    0, 0, 800, 450);
   render.AddSprite("/home/ruben/Projects/BroForceSDL/resources/img/Brobocop.png", 
     18, 22, 15, 20, 3, 10, 4, 32);
   while (!input.quit){

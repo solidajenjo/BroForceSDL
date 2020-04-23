@@ -9,6 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/BroForce",
+            "preLaunchTask": "build",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
