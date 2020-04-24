@@ -17,6 +17,15 @@ file(GLOB source_files
 # Add executable target with source files listed in SOURCE_FILES variable
 add_executable(BroForce ${source_files})
 
+if(EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/SDL2-2.0.12/lib/libSDL2-2.0.so)
+   message("libSDL2 found")
+else()
+   message("libSDL2 not found")
+   execute_process(
+        COMMAND ${CMAKE_SOURCE_DIR}/compileLibs.sh ${CMAKE_SOURCE_DIR}      
+        )
+endif()
+
 TARGET_LINK_LIBRARIES(BroForce 
         ${CMAKE_SOURCE_DIR}/3rdParty/SDL2-2.0.12/lib/libSDL2-2.0.so
         )
