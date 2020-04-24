@@ -1,6 +1,11 @@
 #include "render.h"
 #include "SDL.h"
-#include "SDL_image.h"
+
+extern "C"{
+    #define STB_IMAGE_IMPLEMENTATION
+    #include "stb_image.h"
+}
+
 #include <iostream>
 
 #define WIDTH 800
@@ -27,17 +32,10 @@ bool Render_t::Start(){
 
     }
 
-    //Initialize PNG loading
-    int imgFlags = IMG_INIT_PNG;
-    if( !( IMG_Init( imgFlags ) & imgFlags ) )
-    {
-        std::cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << "\n";
-        return false;
-    }
-
-    SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0xFF, 0xFF );
 
     sprites.reserve(100); //TODO:Magic number
+
     return true;
 }
 
@@ -95,12 +93,45 @@ SDL_Texture* Render_t::LoadTexture(const std::string& name){
         return (*it).second;
 
     SDL_Texture* newTexture = NULL;
+    int req_format = STBI_rgb_alpha;
+    int width, height, orig_format;
+    unsigned char* data = stbi_load(name.c_str(), &width, &height, &orig_format, req_format);
+    if(data == NULL) {
+    SDL_Log("Loading image failed: %s", stbi_failure_reason());
+    exit(1);
+    }
 
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( name.c_str() );
+    // Set up the pixel format color masks for RGB(A) byte arrays.
+    // Only STBI_rgb (3) and STBI_rgb_alpha (4) are supported here!
+    Uint32 rmask, gmask, bmask, amask;
+    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    int shift = (req_format == STBI_rgb) ? 8 : 0;
+    rmask = 0xff000000 >> shift;
+    gmask = 0x00ff0000 >> shift;
+    bmask = 0x0000ff00 >> shift;
+    amask = 0x000000ff >> shift;
+    #else // little endian, like x86
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = (req_format == STBI_rgb) ? 0 : 0xff000000;
+    #endif
+
+    int depth, pitch;
+    if (req_format == STBI_rgb) {
+    depth = 24;
+    pitch = 3*width; // 3 bytes per pixel * pixels per row
+    } else { // STBI_rgb_alpha (RGBA)
+    depth = 32;
+    pitch = 4*width;
+    }
+
+    SDL_Surface* loadedSurface = SDL_CreateRGBSurfaceFrom((void*)data, width, height, depth, pitch,
+                                                rmask, gmask, bmask, amask);
+
     if( loadedSurface == nullptr )
     {
-        std::cout << "Unable to load image " << name.c_str() << "! SDL_image Error: " << IMG_GetError() << "\n";
+        std::cout << "Unable to load image " << name.c_str();
         return nullptr;
     }
     else
@@ -109,7 +140,7 @@ SDL_Texture* Render_t::LoadTexture(const std::string& name){
         newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
         if( newTexture == nullptr )
         {
-          std::cout << "Unable to create texture from " << name.c_str() << "! SDL Error: " << SDL_GetError() << "\n";
+        std::cout << "Unable to create texture from " << name.c_str() << "! SDL Error: " << SDL_GetError() << "\n";
             return nullptr;
         }
 
