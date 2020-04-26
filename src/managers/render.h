@@ -1,6 +1,5 @@
 #pragma once
 #include "manager.h"
-#include <string>
 #include <vector>
 #include <unordered_map>
 #include <component/sprite.h>

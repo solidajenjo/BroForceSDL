@@ -95,10 +95,10 @@ SDL_Texture* Render_t::LoadTexture(const std::string& name){
     SDL_Texture* newTexture = NULL;
     int req_format = STBI_rgb_alpha;
     int width, height, orig_format;
-    unsigned char* data = stbi_load(name.c_str(), &width, &height, &orig_format, req_format);
+    unsigned char* data = stbi_load(name.c_str(), &width, &height, &orig_format, req_format); //TODO: Possible leak?    
     if(data == NULL) {
-    SDL_Log("Loading image failed: %s", stbi_failure_reason());
-    exit(1);
+        SDL_Log("Loading image failed: %s", stbi_failure_reason());
+        exit(1);
     }
 
     // Set up the pixel format color masks for RGB(A) byte arrays.
@@ -164,11 +164,7 @@ Sprite_t* Render_t::CreateSprite(const std::string& name, uint16_t xR, uint16_t 
     return nullptr;
 }
 
-void Render_t::DestroyComponentsByEntityId(uint16_t eid){ //TODO: Can this be a generic method?
-    for (auto it = sprites.begin(); it < sprites.end(); ++it){
-        if ((*it).entityId == eid){
-            std::iter_swap(it, sprites.end() - 1);
-            sprites.pop_back();
-        }
-    }
+
+void Render_t::DestroyComponentsByEntityId(uint16_t eid){    
+    DestroyComponentsByEntityIdGeneric(sprites, eid);
 }

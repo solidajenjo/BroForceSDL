@@ -1,5 +1,4 @@
 #include "timeLogic.h"
-#include <iostream>
 
 void TimeLogic_t::Update(){
     auto now = std::chrono::system_clock::now();
