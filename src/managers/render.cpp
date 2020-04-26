@@ -165,6 +165,6 @@ Sprite_t* Render_t::CreateSprite(const std::string& name, uint16_t xR, uint16_t 
 }
 
 
-void Render_t::DestroyComponentsByEntityId(uint16_t eid){    
-    DestroyComponentsByEntityIdGeneric(sprites, eid);
+void Render_t::DestroyComponentsByEntityId(EntityMan_t* entitiyMan, uint16_t eid){    
+    DestroyComponentsByEntityIdGeneric(entitiyMan, sprites, eid);
 }

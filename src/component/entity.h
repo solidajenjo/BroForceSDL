@@ -1,9 +1,9 @@
 #pragma once
 #include <unordered_map>
 #include <vector>
-#include <managers/manager.h>
+#include "component/component.h"
 
-struct Component_t;
+struct EntityMan_t;
 
 struct Entity_t{
 
@@ -15,7 +15,6 @@ struct Entity_t{
     template<typename T>
     void AddComponent(T* comp){
         comp->entityId = id;
-        comp->entity = this;
         components.template insert(std::make_pair(GetComponentTypeId<T>(), comp));
     }
 
@@ -32,30 +31,20 @@ struct Entity_t{
 private:
 
     inline static uint16_t lastEntityId = 1;    
-    inline static uint16_t componentID = 1;
+    inline static uint16_t lastcomponentID = 1;
 
     bool active = true;
 
     template<typename T>
     uint16_t GetComponentTypeId(){
-        static uint16_t cid = componentID++;
+        static uint16_t cid = lastcomponentID++;
         return cid;
     }
 
-};
-
-struct EntityMan_t : public Manager_t
-{
-    
-    bool Clean() override;
-
-    Entity_t& CreateEntity();
-    Entity_t& GetEntity(uint16_t eid);
-    void SetEntityActive(uint16_t eid, bool active);
-    void DestroyEntity(uint16_t eid);
-    
-private:
-
-    std::vector<Entity_t> entities; //TODO: reserve on startup
-
+    void UpdateComponentReferences(uint16_t cid, Component_t* newAdress){
+        for (auto& c : components){
+            if (c.second->componentId == cid)
+                components[c.first] = newAdress;
+        }
+    }
 };

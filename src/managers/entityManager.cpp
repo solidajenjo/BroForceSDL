@@ -1,5 +1,9 @@
-#include "entity.h"
+#include "entityManager.h"
 #include "component/component.h"
+#include "component/entity.h"
+#include "managers/entityManager.h"
+#include "managers/componentManager.h"
+#include <algorithm>
 
 bool EntityMan_t::Clean(){
     return true;
@@ -17,17 +21,18 @@ Entity_t& EntityMan_t::GetEntity(uint16_t eid){
     return (*it); //TODO: What if not found?   
 }
 
+void EntityMan_t::UpdateComponentReferences(uint16_t eid, uint16_t cid, Component_t* newAdress){
+    Entity_t& e = GetEntity(eid);
+    e.UpdateComponentReferences(cid, newAdress);
+}
+
 void EntityMan_t::DestroyEntity(uint16_t eid){
     Entity_t& e = GetEntity(eid);
 
     for (const auto& component : e.components){
         auto& comp = component.second;
-        comp->manager->DestroyComponentsByEntityId(eid);
+        comp->manager->DestroyComponentsByEntityId(this, eid);
     }
-    //TODO: Remove from entities, but the components point to the entities.
-/*     std::remove_if(
-
-    ); */
 }
 
 Entity_t& EntityMan_t::CreateEntity(){      

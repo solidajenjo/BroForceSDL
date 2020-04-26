@@ -1,8 +1,9 @@
 #include "managers/render.h"
 #include "managers/input.h"
 #include "managers/timeLogic.h"
-#include "managers/entity.h"
+#include "managers/entityManager.h"
 #include "component/sprite.h"
+#include "component/entity.h"
 
 int main (int argc, char **argv)
 {

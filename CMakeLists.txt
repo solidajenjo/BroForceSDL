@@ -16,6 +16,8 @@ file(GLOB source_files
         "3rdParty/stb/stb_image.h"
         "src/*.h"
         "src/*.cpp"
+        "src/component/*.h"
+        "src/component/*.cpp"
         "src/managers/*.h"
         "src/managers/*.cpp"
         )

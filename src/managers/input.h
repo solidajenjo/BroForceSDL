@@ -1,7 +1,7 @@
 #pragma once
-#include "manager.h"
+#include "componentManager.h"
 
-struct Input_t : public Manager_t{
+struct Input_t : public ComponentManager_t{
 
     bool Update(float dt) override;
 
